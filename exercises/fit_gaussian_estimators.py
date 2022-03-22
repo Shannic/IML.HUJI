@@ -12,31 +12,29 @@ def test_univariate_gaussian():
     X = np.random.normal(mu, 1, 1000)
     u = UnivariateGaussian()
     u.fit(X)
-    print("(", u.mu_, u.var_, ")")
+    print("(", u.mu_, ",", u.var_, ")")
 
     # Question 2 - Empirically showing sample mean is consistent
     ms = np.linspace(10, 1000, 100).astype(int)
-    Y = [abs(u.fit(X[:i]).mu_ - mu) for i in ms]
+    Y = [np.abs(u.fit(X[:i]).mu_ - mu) for i in ms]
 
     fig2 = go.Figure([go.Scatter(x=ms, y=Y, mode='markers+lines')])
     fig2.update_layout(
         title=r"$\text{Distance between Estimation of Expectation "
-              r"and Expictation As Function "
-              r"Of Number Of Samples}$",
+              r"and Expictation As Function Of Number Of Samples}$",
         xaxis_title="$\\text{ number of samples}$",
         yaxis_title="r$|\hat\mu-\mu|$",
         height=300).show()
 
     # Question 3 - Plotting Empirical PDF of fitted model
-    x_axis = np.linspace(6, 14, 1000)
-    pdf_val = u.pdf(x_axis)
-
-    fig3 = go.Figure([go.Scatter(x=x_axis, y=pdf_val, mode='lines',
+    ordered_samples = np.array(sorted(X))
+    fig3 = go.Figure([go.Scatter(x=ordered_samples, y=u.pdf(ordered_samples),
+                                 mode='markers',
                                  line=dict(width=3))])
     fig3.update_layout(barmode='overlay',
                        title=r"$\text{PDF of Samples}$",
-                       xaxis_title=r"$\text{value}$",
-                       yaxis_title=r"$\text{density function}$",
+                       xaxis_title=r"$\text{Samples}$",
+                       yaxis_title=r"$\text{Density function}$",
                        height=300).show()
 
 
@@ -62,8 +60,12 @@ def test_multivariate_gaussian():
     fig = go.Figure(data=
                     go.Contour(z=np.array(likelihoods),
                                x=f3,
-                               y=f1)
-                    )
+                               y=f1,
+                               colorbar=dict(
+                                   title="log-likelihood",
+                                   titleside='right',
+                                   titlefont=dict(family='Times')
+                               )))
     fig.update_layout(xaxis_title=r"$\text{f3}$",
                       yaxis_title=r"$\text{f1}$",
                       title=r"$\text{Heatmap of Log-Likelihood on "

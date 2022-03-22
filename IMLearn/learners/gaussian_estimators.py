@@ -85,8 +85,7 @@ class UnivariateGaussian:
             raise ValueError(
                 "Estimator must first be fitted before calling `pdf` function")
         return (1 / np.sqrt(self.var_ * 2 * np.pi)) * np.exp(
-            -(X - self.mu_) ** 2 / (
-                    2 * self.var_))
+            -(X - self.mu_) ** 2 / (2 * self.var_))
 
     @staticmethod
     def log_likelihood(mu: float, sigma: float, X: np.ndarray) -> float:
@@ -108,7 +107,8 @@ class UnivariateGaussian:
         log_likelihood: float
             log-likelihood calculated
         """
-        return -0.5*(X.size*np.log(2*np.pi*sigma)+(1/sigma)*(X-mu)@(X-mu).T)
+        return -0.5 * (X.size * np.log(2 * np.pi * sigma) +
+                       (1 / sigma) * (X - mu) @ (X - mu).T)
 
 
 class MultivariateGaussian:
@@ -185,8 +185,8 @@ class MultivariateGaussian:
             raise ValueError(
                 "Estimator must first be fitted before calling `pdf` function")
         tmp1 = np.exp(
-            np.diag(-0.5 * (X - self.mu_) @ np.linalg.inv(self.cov_) @
-                    (X - self.mu_).T))
+            np.sum((X - self.mu_) @ np.linalg.inv(self.cov_) * (X - self.mu_),
+                   axis=1))
         tmp2 = 1 / np.sqrt(
             ((2 * np.pi) ** X.shape[1]) * np.linalg.det(self.cov_))
         return tmp1 * tmp2
@@ -215,5 +215,5 @@ class MultivariateGaussian:
         """
         tmp1 = X.size * np.log(2 * np.pi)
         tmp2 = X.shape[0] * np.log(np.linalg.det(cov))
-        tmp3 = np.sum(np.diag((X - mu) @ np.linalg.inv(cov) @ (X - mu).T))
+        tmp3 = np.sum((X - mu) @ np.linalg.inv(cov) * (X - mu))
         return -0.5 * (tmp1 + tmp2 + tmp3)
