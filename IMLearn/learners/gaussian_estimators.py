@@ -106,7 +106,7 @@ class UnivariateGaussian:
         Returns
         -------
         log_likelihood: float
-            log-likelihood calculated //todo sigma ?
+            log-likelihood calculated
         """
         return -0.5*(X.size*np.log(2*np.pi*sigma)+(1/sigma)*(X-mu)@(X-mu).T)
 
@@ -217,4 +217,3 @@ class MultivariateGaussian:
         tmp2 = X.shape[0] * np.log(np.linalg.det(cov))
         tmp3 = np.sum(np.diag((X - mu) @ np.linalg.inv(cov) @ (X - mu).T))
         return -0.5 * (tmp1 + tmp2 + tmp3)
-
