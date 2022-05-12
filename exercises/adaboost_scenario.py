@@ -48,30 +48,30 @@ def fit_and_evaluate_adaboost(noise, n_learners=250, train_size=5000, test_size=
     ada_learner = AdaBoost(DecisionStump, n_learners).fit(train_X, train_y)
     train_loss = []
     test_loss = []
-    for T in range(1, n_learners+1):
+    for T in range(1, n_learners + 1):
         train_loss.append(ada_learner.partial_loss(train_X, train_y, T))
         test_loss.append(ada_learner.partial_loss(test_X, test_y, T))
-    data = [go.Scatter(x=list(range(1, n_learners+1)), y=train_loss, mode='lines', name="train error",
+    data = [go.Scatter(x=list(range(1, n_learners + 1)), y=train_loss, mode='lines', name="train error",
                        showlegend=True),
-            go.Scatter(x=list(range(1, n_learners+1)), y=test_loss, mode='lines',
+            go.Scatter(x=list(range(1, n_learners + 1)), y=test_loss, mode='lines',
                        name="test error", showlegend=True)]
     fig1 = go.Figure(data)
     fig1.update_layout(title=f"Test and Train Error as Function of Amount of Learners, noise = {noise}",
-                      xaxis_title="number of learners").show()
+                       xaxis_title="number of learners", yaxis_title="error").show()
 
     # Question 2: Plotting decision surfaces
     T = [5, 50, 100, 250]
     lims = np.array([np.r_[train_X, test_X].min(axis=0), np.r_[train_X, test_X].max(axis=0)]).T + np.array([-.1, .1])
     fig2 = make_subplots(rows=2, cols=2, subplot_titles=[f"Number of Models: {t}" for t in T],
-                        horizontal_spacing=0.01, vertical_spacing=.05)
+                         horizontal_spacing=0.01, vertical_spacing=.05)
     for i, t in enumerate(T):
         fig2.add_traces([decision_surface(lambda x: ada_learner.partial_predict(x, t), lims[0], lims[1],
-                                         showscale=False),
-                        go.Scatter(x=test_X[:, 0], y=test_X[:, 1], mode="markers", showlegend=False,
-                                   marker=dict(color=test_y, symbol="circle",
-                                               colorscale=[custom[0], custom[-1]],
-                                               line=dict(color="black", width=1)))],
-                       rows=(i // 2) + 1, cols=(i % 2) + 1)
+                                          showscale=False),
+                         go.Scatter(x=test_X[:, 0], y=test_X[:, 1], mode="markers", showlegend=False,
+                                    marker=dict(color=test_y, symbol="circle",
+                                                colorscale=[custom[0], custom[-1]],
+                                                line=dict(color="black", width=1)))],
+                        rows=(i // 2) + 1, cols=(i % 2) + 1)
     fig2.update_layout(title=f"Decision Boundaries of Models Including Test Set, noise = {noise}", margin=dict(t=100)) \
         .update_xaxes(visible=False).update_yaxes(visible=False).show()
 
@@ -97,7 +97,7 @@ def fit_and_evaluate_adaboost(noise, n_learners=250, train_size=5000, test_size=
                                                   size=D, line=dict(color="black", width=1)))])
     fig4.update_layout(title=f"Decision Boundary of Adaboost including Train Points Sized According to D[250]",
                        margin=dict(
-        t=100)).update_xaxes(visible=False).update_yaxes(visible=False).show()
+                           t=100)).update_xaxes(visible=False).update_yaxes(visible=False).show()
 
 
 if __name__ == '__main__':

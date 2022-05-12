@@ -109,6 +109,7 @@ class DecisionStump(BaseEstimator):
         sorted_idx = np.argsort(values)
         sorted_x, y = values[sorted_idx], labels[sorted_idx]
         thresholds = np.concatenate([sorted_x, [np.inf]])
+        thresholds[0] = -np.inf
         prob_min_sign = np.abs(np.sum(y[np.sign(y) != sign]))  # calculating the probability over the -sign labels
         loss = np.append(prob_min_sign, prob_min_sign + np.cumsum(y * sign))  # calculating loss over each threshold
         idx = np.argmin(loss)
