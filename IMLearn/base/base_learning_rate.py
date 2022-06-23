@@ -20,4 +20,4 @@ class BaseLR(ABC):
         learning_rate: float
             Learning rate to be used in descent method
         """
-        raise NotImplementedError()
+        # raise NotImplementedError()
